@@ -9,8 +9,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [x86_64-unknown-linux-musl]
-        archive: [zip tar.gz]
+        include:
+          - target: x86_64-unknown-linux-musl
+            archive: zip tar.gz
     steps:
       - uses: actions/checkout@master
       - name: Compile and release
