@@ -54,5 +54,4 @@ pub async fn exec_broadlink_command(config: &Config, device: &String, command: S
         .await
         .expect("Internal Server Error");
 
-    log::info!("Command sent");
 }

@@ -26,20 +26,15 @@ async fn main() {
 
     env_logger::init();
 
-    log::info!("Starting up");
     log::debug!("Device: {}", device);
     log::debug!("Command: {}", command);
 
     let config: core::Config = core::read_config_file();
-    log::info!("Config file loaded");
 
     let device_type = core::get_device_type(&config, &device);
-    log::info!("Device type found: {:?}", device_type);
-
 
     match device_type {
         core::DeviceType::Broadlink => {
-            log::info!("Broadlink");
             exec_broadlink_command(&config, &device, command).await;
         },
         core::DeviceType::SwitchBot => {
