@@ -29,10 +29,10 @@ touch ~/.config/domust/config.yaml
 # ~/.config/domust/config.yaml  
   
 broadlink:
-manager_url: <URL>  
-device_type: <TYPE>  
-device_ip: <IP>  
-device_mac: <MAC>
+    manager_url: <URL>  
+    device_type: <TYPE>  
+    device_ip: <IP>  
+    device_mac: <MAC>
 
 devices:
   - name: <DEVICE_NAME>
