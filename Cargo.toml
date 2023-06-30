@@ -1,5 +1,9 @@
 [package]
 name = "domust"
+description = "Domust is a home automation system that allows you to control your home form your computer."
+homepage = "https://github.com/lucafulgenzi/domust"
+repository = "https://github.com/lucafulgenzi/domust"
+license = "AGPL-3.0"
 authors = ["Luca Fulgenzi <luca.fugenzi@justanother.cloud>"]
 version = "0.1.0"
 edition = "2021"
