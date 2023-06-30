@@ -38,9 +38,13 @@ pub struct Command {
 
 pub fn read_config_file() -> Config {
     let config_file_path = tilde("~/.config/domust/config.yaml"); // TODO: search for .yaml and .yml
+    log::debug!("Config file path: {}", config_file_path);
 
     let config_file = File::open(config_file_path.to_string()).expect("Unable to open config file");
+    log::debug!("Config file: {:?}", config_file);
+
     let config: Config = serde_yaml::from_reader(config_file).expect("Unable to parse config file");
+    log::debug!("Config: {:?}", config);
 
     return config;
 }
@@ -52,6 +56,7 @@ pub fn get_device_type(config: &Config, device_type: &String) -> DeviceType {
         .cloned()
         .expect("Unable to find device");
 
+    log::debug!("Device: {:?}", device);
     return device.device_type;
 }
 
