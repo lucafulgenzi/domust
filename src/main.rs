@@ -7,10 +7,7 @@ mod devices;
 use crate::devices::exec_broadlink_command;
 
 #[derive(Parser)]
-#[command(name = "domust")]
-#[command(author = "Luca Fulgenzi <fulgenzi.luca@justanother.cloud>")]
-#[command(version)]
-#[command(about = "Does awesome things", long_about = None)]
+#[command(version, name = "Domust", author, about)]
 struct Cli {
 
     device_name: String,
@@ -23,7 +20,6 @@ struct Cli {
     debug: bool,
 }
 
-
 #[tokio::main]
 async fn main() {
     let cli = Cli::parse();
@@ -34,10 +30,8 @@ async fn main() {
         env::set_var("RUST_LOG", "info");
     }
 
-
     let device: String = cli.device_name.clone();
     let command: String = cli.device_command.clone();
-
 
     env_logger::init();
 
@@ -45,7 +39,6 @@ async fn main() {
     log::debug!("Command: {}", command);
 
     let config: core::Config = core::read_config_file(cli.config);
-
     let device_type = core::get_device_type(&config, &device);
 
     match device_type {

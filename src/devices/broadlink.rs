@@ -64,5 +64,4 @@ pub async fn exec_broadlink_command(config: &Config, device: &String, command: S
             log::error!("Error sending request to broadlink manager: {:?}", e);
             std::process::exit(1);
         });
-
 }
