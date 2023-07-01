@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 use serde_yaml::{self};
 use shellexpand::tilde;
@@ -36,14 +37,25 @@ pub struct Command {
     pub code: String,
 }
 
-pub fn read_config_file() -> Config {
-    let config_file_path = tilde("~/.config/domust/config.yaml"); // TODO: search for .yaml and .yml
-    log::debug!("Config file path: {}", config_file_path);
+pub fn read_config_file(config_path: Option<PathBuf>) -> Config {
 
-    let config_file = File::open(config_file_path.to_string()).expect("Unable to open config file");
+    let config_file_path = config_path.unwrap_or_else(|| {
+        let mut path = PathBuf::new();
+        path.push(tilde("~/.config/domust/config.yaml").to_string());
+        path
+    });
+    log::debug!("Config file path: {:?}", config_file_path);
+
+    let config_file = File::open(config_file_path.clone()).unwrap_or_else(|_| {
+        log::error!("No config file found in {:?}", config_file_path);
+        std::process::exit(1);
+    });
     log::debug!("Config file: {:?}", config_file);
 
-    let config: Config = serde_yaml::from_reader(config_file).expect("Unable to parse config file");
+    let config: Config = serde_yaml::from_reader(config_file).unwrap_or_else(|e| {
+        log::error!("Error reading config file: {:?}", e);
+        std::process::exit(1);
+    });
     log::debug!("Config: {:?}", config);
 
     return config;
@@ -54,7 +66,10 @@ pub fn get_device_type(config: &Config, device_type: &String) -> DeviceType {
         .iter()
         .find(|&d| &d.name == device_type)
         .cloned()
-        .expect("Unable to find device");
+        .unwrap_or_else(|| {
+            log::error!("Device {:?} not found in config file", device_type);
+            std::process::exit(1);
+        });
 
     log::debug!("Device: {:?}", device);
     return device.device_type;

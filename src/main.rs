@@ -1,35 +1,50 @@
+use std::path::PathBuf;
+use clap::{Parser};
 use std::env;
-use crate::devices::exec_broadlink_command;
-
 
 mod core;
 mod devices;
+use crate::devices::exec_broadlink_command;
+
+#[derive(Parser)]
+#[command(name = "domust")]
+#[command(author = "Luca Fulgenzi <fulgenzi.luca@justanother.cloud>")]
+#[command(version)]
+#[command(about = "Does awesome things", long_about = None)]
+struct Cli {
+
+    device_name: String,
+    device_command: String,
+
+    #[arg(short, long, value_name = "FILE")]
+    config: Option<PathBuf>,
+
+    #[arg(short, long)]
+    debug: bool,
+}
+
 
 #[tokio::main]
 async fn main() {
-    let args: Vec<String> = env::args().collect();
+    let cli = Cli::parse();
 
-    if args.is_empty() || args.len() < 3 {
-        log::error!("No arguments provided");
-        return;
-    }
-
-    let device: String = args[1].clone();
-    let command: String = args[2].clone();
-    let verbose: bool = args.len() > 3 && args[3] == "-v";
-
-    if verbose {
+    if cli.debug {
         env::set_var("RUST_LOG", "debug");
     } else {
         env::set_var("RUST_LOG", "info");
     }
+
+
+    let device: String = cli.device_name.clone();
+    let command: String = cli.device_command.clone();
+
 
     env_logger::init();
 
     log::debug!("Device: {}", device);
     log::debug!("Command: {}", command);
 
-    let config: core::Config = core::read_config_file();
+    let config: core::Config = core::read_config_file(cli.config);
 
     let device_type = core::get_device_type(&config, &device);
 
