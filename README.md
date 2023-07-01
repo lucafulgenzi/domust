@@ -8,14 +8,8 @@ Domust is a home automation system that allows you to control your home form you
 ### Arch Linux
 
 ```bash  
-yay -S domust
+yay -S domust-bin
 ```  
-
-### Cargo
-
-```bash
-cargo install domust
-```
 
 ## Disclaimer
 
@@ -26,10 +20,6 @@ Domust works with [broadlinkmanager](https://github.com/t0mer/broadlinkmanager-d
 
 ### Device types
 - Broadlink
-
-```bash  
-touch ~/.config/domust/config.yaml  
-```  
 
 ```yaml  
 # ~/.config/domust/config.yaml  
