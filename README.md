@@ -11,6 +11,12 @@ Domust is a home automation system that allows you to control your home form you
 yay -S domust
 ```  
 
+### Cargo
+
+```bash
+cargo install domust
+```
+
 ## Disclaimer
 
 #### Broadlink
