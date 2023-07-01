@@ -24,29 +24,6 @@ defaults:
     shell: bash
 
 jobs:
-  create-release:
-    if: github.repository_owner == 'lucafulgenzi'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-      - name: Install Rust
-        run: rustup update stable --no-self-update
-      - run: cargo package
-      - uses: taiki-e/create-gh-release-action@v1
-        with:
-          changelog: CHANGELOG.md
-          title: $version
-          branch: main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: cargo publish
-        env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-
   upload-assets:
     name: ${{ matrix.target }}
     if: github.repository_owner == 'lucafulgenzi'
