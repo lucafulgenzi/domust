@@ -1,0 +1,29 @@
+# domust(1) completion                                        -*- shell-script -*-
+
+_domust_completions(){
+
+    if [[ -f "$DOMUST_CONFIG_PATH" ]]; then
+        domust_config_path=$DOMUST_CONFIG_PATH
+    else
+        domust_config_path=$HOME/.config/domust/config.yaml
+    fi
+
+    local suggestions
+    suggestions=""
+
+    case $COMP_CWORD in
+        1)
+            suggestions=$(cat $domust_config_path | yq .devices[].name | tr -d '"' | paste -sd ' ')
+            COMPREPLY=( $(compgen -W "${suggestions}" "${COMP_WORDS[COMP_CWORD]}") )
+            ;;
+        2)
+            suggestions=$(cat $domust_config_path | yq ".devices[] | select( .name == \"${COMP_WORDS[1]}\" ).commands[].name" | tr -d '"' | paste -sd ' ')
+            COMPREPLY=( $(compgen -W  "${suggestions}" "${COMP_WORDS[COMP_CWORD]}") )
+            ;;
+    esac
+    return 0
+}
+
+complete -F _domust_completions domust
+
+# ex: filetype=sh
