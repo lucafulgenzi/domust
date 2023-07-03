@@ -39,3 +39,11 @@ devices:
       - name: <COMMAND_NAME>
         code: <HEX_CODE>
 ```
+
+### Change config file location
+
+```bash
+vim .bashrc
+
+export DOMUST_CONFIG_PATH=<PATH>
+```

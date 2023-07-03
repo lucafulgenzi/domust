@@ -1,6 +1,6 @@
 use base64::{engine::general_purpose, Engine as _};
 use hex;
-use crate::core::{Broadlink, Command, Config};
+use crate::definition::{Broadlink, Command, Config};
 
 
 const BROADLINK_COMMAND_ENDPOINT: &str = "/command/send/";
