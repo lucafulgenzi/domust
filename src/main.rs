@@ -18,24 +18,8 @@ async fn main() {
     let config: Config = definition::read_config_file(cli.config);
 
     if cli.suggestion.is_some() {
-        let suggestions = cli.suggestion.clone().expect("Error parsing suggestions");
-        match suggestions.len() {
-            0 => {
-                println!("{}", get_all_devices(&config));
-                std::process::exit(1);
-            },
-            1 => {
-                println!("{:?}", get_all_device_commands(&config, suggestions[0].clone()));
-                std::process::exit(1);
-            },
-            _ => {
-                std::process::exit(1);
-            }
-        }
-
-
+       check_completion(&config, cli.suggestion.unwrap());
     }
-
 
     let device: String = cli.device_name.clone();
     let command: String = cli.device_command.clone();
@@ -60,5 +44,21 @@ fn set_log_level(debug: bool) {
         env::set_var("RUST_LOG", "debug");
     } else {
         env::set_var("RUST_LOG", "info");
+    }
+}
+
+fn check_completion(config: &Config, suggestions: Vec<String>){
+    match suggestions.len() {
+        0 => {
+            println!("{}", get_all_devices(&config));
+            std::process::exit(1);
+        },
+        1 => {
+            println!("{:?}", get_all_device_commands(&config, suggestions[0].clone()));
+            std::process::exit(1);
+        },
+        _ => {
+            std::process::exit(1);
+        }
     }
 }
