@@ -2,22 +2,16 @@
 
 _domust_completions(){
 
-    if [[ -f "$DOMUST_CONFIG_PATH" ]]; then
-        domust_config_path=$DOMUST_CONFIG_PATH
-    else
-        domust_config_path=$HOME/.config/domust/config.yaml
-    fi
-
     local suggestions
     suggestions=""
 
     case $COMP_CWORD in
         1)
-            suggestions=$(cat $domust_config_path | yq .devices[].name | tr -d '"' | paste -sd ' ')
+            suggestions=$(domust -s)
             COMPREPLY=( $(compgen -W "${suggestions}" "${COMP_WORDS[COMP_CWORD]}") )
             ;;
         2)
-            suggestions=$(cat $domust_config_path | yq ".devices[] | select( .name == \"${COMP_WORDS[1]}\" ).commands[].name" | tr -d '"' | paste -sd ' ')
+            suggestions=$( domust -s "${COMP_WORDS[1]}")
             COMPREPLY=( $(compgen -W  "${suggestions}" "${COMP_WORDS[COMP_CWORD]}") )
             ;;
     esac

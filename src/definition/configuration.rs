@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::env;
 use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 use serde_yaml::{self};
@@ -74,4 +75,6 @@ pub fn get_device_type(config: &Config, device_type: &String) -> DeviceType {
     log::debug!("Device: {:?}", device);
     return device.device_type;
 }
+
+
 
