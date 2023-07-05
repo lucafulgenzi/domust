@@ -9,7 +9,14 @@ Domust is a home automation system that allows you to control your home form you
 
 ```bash  
 yay -S domust-bin
-```  
+```
+
+### MacOS
+
+```bash
+brew tap lucafulgenzi/domust
+brew install domust
+```
 
 ## Disclaimer
 
