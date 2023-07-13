@@ -15,7 +15,6 @@ pub async fn exec_switchbot_command(config: &Config, device: &Device, command: S
         device,
         command
     );
-    check_device_options(device);
 
     let mut data = HashMap::new();
     data.insert("command", command);
@@ -72,20 +71,6 @@ pub async fn exec_switchbot_command(config: &Config, device: &Device, command: S
             std::process::exit(1);
         });
     log::debug!("Switchbot response: {:?}", res);
-}
-
-fn check_device_options(device: &Device) {
-    let dev = device.clone();
-    check_existence(dev.switchbot_device_id, "No switchbot device id");
-    check_existence(dev.switchbot_device_name, "No switchbot device name");
-    check_existence(dev.switchbot_device_type, "No switchbot device type");
-}
-
-fn check_existence(value: String, error_message: &str) {
-    if Some(value) == None {
-        log::error!("{}", error_message);
-        std::process::exit(1);
-    }
 }
 
 fn sign_message(message: &[u8], secret: &[u8]) -> Vec<u8> {
