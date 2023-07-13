@@ -1,0 +1,23 @@
+# domust(1) completion                                        -*- shell-script -*-
+
+_domust_completions(){
+
+    local suggestions
+    suggestions=""
+
+    case $COMP_CWORD in
+        1)
+            suggestions=$(domust -s)
+            COMPREPLY=( $(compgen -W "${suggestions}" "${COMP_WORDS[COMP_CWORD]}") )
+            ;;
+        2)
+            suggestions=$( domust -s "${COMP_WORDS[1]}")
+            COMPREPLY=( $(compgen -W  "${suggestions}" "${COMP_WORDS[COMP_CWORD]}") )
+            ;;
+    esac
+    return 0
+}
+
+complete -F _domust_completions domust
+
+# ex: filetype=sh

@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::env;
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
@@ -66,34 +67,6 @@ pub struct Device {
     #[serde(default)]
     pub tuya_mac: String,
 }
-//
-// #[derive(Debug, Serialize, Deserialize, Clone)]
-// pub struct BroadlinkDevice {
-//     pub name: String,
-//     pub device_type: DeviceType,
-//     pub commands: Vec<Command>,
-// }
-//
-// #[derive(Debug, Serialize, Deserialize, Clone)]
-// pub struct SwitchbotDevice {
-//     pub name: String,
-//     pub device_type: DeviceType,
-//     pub commands: Vec<Command>,
-//     pub switchbot_device_id: String,
-//     pub switchbot_device_name: String,
-//     pub switchbot_device_type: String,
-// }
-//
-// #[derive(Debug, Serialize, Deserialize, Clone)]
-// pub struct TuyaDevice {
-//     pub name: String,
-//     pub device_type: DeviceType,
-//     pub commands: Vec<Command>,
-//     pub tuya_id: String,
-//     pub tuya_ip: String,
-//     pub tuya_key: String,
-//     pub tuya_ver: String,
-// }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Command {
@@ -101,16 +74,23 @@ pub struct Command {
     pub code: String,
 }
 
-// impl Device for BroadlinkDevice {
-//     fn match_type(self);
-// }
+static DEFAULT_CONFIG_FILE: &str = "~/.config/domust/config.yaml";
+static ENV_VAR_CONFIG_FILE: &str = "DOMUST_CONFIG_PATH";
+
 
 pub fn read_config_file(config_path: Option<PathBuf>) -> Config {
     let config_file_path = config_path.unwrap_or_else(|| {
         let mut path = PathBuf::new();
-        path.push(tilde("~/.config/domust/config.yaml").to_string());
+
+        let global_path = env::var(ENV_VAR_CONFIG_FILE).unwrap_or_else(|_| {
+            tilde(DEFAULT_CONFIG_FILE).to_string()
+        });
+
+        path.push(global_path);
         path
     });
+
+
     log::debug!("Config file path: {:?}", config_file_path);
 
     let config_file = File::open(config_file_path.clone()).unwrap_or_else(|_| {
@@ -142,3 +122,6 @@ pub fn get_device(config: &Config, device_name: &String) -> Device {
     log::debug!("Device: {:?}", device);
     return device;
 }
+
+
+
