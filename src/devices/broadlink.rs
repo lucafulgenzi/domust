@@ -1,7 +1,7 @@
 use base64::{engine::general_purpose, Engine as _};
 use hex;
 
-use crate::core::{Broadlink, Command, Config, Device};
+use crate::definition::{Broadlink, Command, Config, Device};
 
 static BROADLINK_COMMAND_ENDPOINT: &str = "/command/send/";
 

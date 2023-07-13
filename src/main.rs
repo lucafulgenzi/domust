@@ -3,10 +3,10 @@ use std::path::PathBuf;
 
 use clap::Parser;
 
-use crate::core::Command;
+use crate::definition::{get_all_device_commands, get_all_devices, Command, Config};
 use crate::devices::{exec_broadlink_command, exec_switchbot_command, exec_tuya_command};
 
-mod core;
+mod definition;
 mod devices;
 
 static RUST_LOG: &str = "RUST_LOG";
@@ -44,8 +44,8 @@ async fn main() {
     log::debug!("Device: {}", device_name);
     log::debug!("Command: {}", command);
 
-    let config: core::Config = core::read_config_file(cli.config);
-    let device = core::get_device(&config, &device_name);
+    let config: definition::Config = definition::read_config_file(cli.config);
+    let device = definition::get_device(&config, &device_name);
 
     device
         .commands
@@ -58,17 +58,16 @@ async fn main() {
         });
 
     match device.device_type {
-        core::DeviceType::Broadlink => {
+        definition::DeviceType::Broadlink => {
             exec_broadlink_command(&config, &device, command).await;
         }
-        core::DeviceType::SwitchBot => {
+        definition::DeviceType::SwitchBot => {
             exec_switchbot_command(&config, &device, command).await;
         }
-        core::DeviceType::Tuya => {
+        definition::DeviceType::Tuya => {
             exec_tuya_command(&config, &device, command).await;
         }
     }
-
 }
 
 fn set_log_level(debug: bool) {
@@ -79,16 +78,19 @@ fn set_log_level(debug: bool) {
     }
 }
 
-fn check_completion(config: &Config, suggestions: Vec<String>){
+fn check_completion(config: &Config, suggestions: Vec<String>) {
     match suggestions.len() {
         0 => {
             println!("{}", get_all_devices(&config));
             std::process::exit(1);
-        },
+        }
         1 => {
-            println!("{:?}", get_all_device_commands(&config, suggestions[0].clone()));
+            println!(
+                "{:?}",
+                get_all_device_commands(&config, suggestions[0].clone())
+            );
             std::process::exit(1);
-        },
+        }
         _ => {
             std::process::exit(1);
         }

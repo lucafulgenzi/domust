@@ -6,7 +6,7 @@ use base64::Engine;
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE};
 use ring::hmac::{self, Key, HMAC_SHA256};
 
-use crate::core::{Config, Device};
+use crate::definition::{Config, Device};
 
 pub async fn exec_switchbot_command(config: &Config, device: &Device, command: String) {
     log::debug!(

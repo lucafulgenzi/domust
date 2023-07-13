@@ -1,4 +1,4 @@
-use crate::core::{Config, Device};
+use crate::definition::{Config, Device};
 
 pub async fn exec_tuya_command(config: &Config, device: &Device, command: String) {
     log::debug!(
