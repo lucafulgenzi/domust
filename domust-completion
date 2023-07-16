@@ -12,7 +12,7 @@ _domust_completions(){
             ;;
         2)
             suggestions=$( domust -s "${COMP_WORDS[1]}")
-            COMPREPLY=( $(compgen -W  "${suggestions}" "${COMP_WORDS[COMP_CWORD]}") )
+            COMPREPLY=( $(compgen -W "${suggestions}" "${COMP_WORDS[COMP_CWORD]}") )
             ;;
     esac
     return 0
