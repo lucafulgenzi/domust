@@ -54,7 +54,7 @@ fn check_completion(config: &Config, suggestions: Vec<String>){
             std::process::exit(1);
         },
         1 => {
-            println!("{:?}", get_all_device_commands(&config, suggestions[0].clone()));
+            println!("{}", get_all_device_commands(&config, suggestions[0].clone()));
             std::process::exit(1);
         },
         _ => {
