@@ -4,7 +4,7 @@ use std::path::PathBuf;
 use clap::Parser;
 
 use crate::definition::{get_all_device_commands, get_all_devices, Command, Config};
-use crate::devices::{exec_broadlink_command, exec_switchbot_command, exec_tuya_command};
+use crate::devices::{exec_broadlink_command, exec_switchbot_command};
 
 mod definition;
 mod devices;
@@ -63,9 +63,6 @@ async fn main() {
         }
         definition::DeviceType::SwitchBot => {
             exec_switchbot_command(&config, &device, command).await;
-        }
-        definition::DeviceType::Tuya => {
-            exec_tuya_command(&config, &device, command).await;
         }
     }
 }
