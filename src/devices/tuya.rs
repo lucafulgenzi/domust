@@ -3,6 +3,7 @@ use std::net::IpAddr;
 use std::str::FromStr;
 use std::time::SystemTime;
 
+use log::log;
 use rust_tuyapi::tuyadevice::TuyaDevice;
 use rust_tuyapi::{Payload, PayloadStruct};
 use serde_json::json;
@@ -51,6 +52,13 @@ pub async fn exec_tuya_command(config: &Config, device: &Device, command: String
     log::debug!("Tuya device ip: {}", device.tuya_ip);
     log::debug!("Tuya device key: {}", device.tuya_key);
     log::debug!("Tuya payload: {:?}", payload);
+
+    // let tuya_device = TuyaDevice::create_with_transport(
+    //     &*version,
+    //     Some(&*device.tuya_key),
+    //     IpAddr::from_str(&device.tuya_ip).unwrap(),
+    //     Transport::TCP(6668),
+    // ).expect("Cannot create Tuya device");
 
     let tuya_device = TuyaDevice::create(
         &*version,
