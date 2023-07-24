@@ -5,10 +5,7 @@ use crate::definition::{Broadlink, Command, Config, Device};
 
 static BROADLINK_COMMAND_ENDPOINT: &str = "/command/send/";
 
-fn get_broadlink_request_parameters(
-    config: &Broadlink,
-    command: Command,
-) -> [(&'static str, String); 4] {
+fn get_broadlink_request_parameters(config: &Option<Broadlink>, command: Command) -> [(&'static str, String); 4] {
     let decoded_command = general_purpose::STANDARD
         .decode(command.code)
         .unwrap_or_else(|e| {
@@ -20,10 +17,25 @@ fn get_broadlink_request_parameters(
     let hex_command = hex::encode(decoded_command);
     log::debug!("Hex command: {}", hex_command);
 
+    let param_type = config.clone().unwrap_or_else(|| {
+        log::error!("No broadlink config");
+        std::process::exit(1);
+    }).device_type;
+
+    let param_host = config.clone().unwrap_or_else(|| {
+        log::error!("No broadlink config");
+        std::process::exit(1);
+    }).device_ip;
+
+    let param_mac = config.clone().unwrap_or_else(|| {
+        log::error!("No broadlink config");
+        std::process::exit(1);
+    }).device_mac;
+
     let params = [
-        ("type", config.device_type.to_owned()),
-        ("host", config.device_ip.to_owned()),
-        ("mac", config.device_mac.to_owned()),
+        ("type", param_type.to_owned()),
+        ("host", param_host.to_owned()),
+        ("mac", param_mac.to_owned()),
         ("command", hex_command),
     ];
     log::debug!("Request parameters: {:?}", params);
@@ -43,10 +55,11 @@ pub async fn exec_broadlink_command(config: &Config, broadlink_device: &Device, 
         });
     log::debug!("Broadlink command: {:?}", broadlink_command);
 
-    let broadlink_request_url = format!(
-        "{}{}",
-        config.broadlink.manager_url, BROADLINK_COMMAND_ENDPOINT
-    );
+    let broadlink_manager_url = config.broadlink.clone().unwrap_or_else(|| {
+        log::error!("No broadlink config");
+        std::process::exit(1);
+    }).manager_url;
+    let broadlink_request_url = format!( "{}{}", broadlink_manager_url, BROADLINK_COMMAND_ENDPOINT );
     log::debug!("Broadlink request URL: {}", broadlink_request_url);
 
     let broadlink_request_parameters =

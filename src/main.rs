@@ -1,9 +1,7 @@
 use std::env;
-use std::path::PathBuf;
-
 use clap::Parser;
 
-use crate::definition::{get_all_device_commands, get_all_devices, Command, Config};
+use crate::definition::{Cli, get_all_device_commands, get_all_devices, Command, Config};
 use crate::devices::{exec_broadlink_command, exec_switchbot_command};
 
 mod definition;
@@ -11,40 +9,26 @@ mod devices;
 
 static RUST_LOG: &str = "RUST_LOG";
 
-#[derive(Parser)]
-#[command(version, name = "Domust", author, about)]
-struct Cli {
-    device_name: String,
-    device_command: String,
-
-    #[arg(short, long, value_name = "FILE")]
-    config: Option<PathBuf>,
-
-    #[arg(short, long)]
-    debug: bool,
-}
 
 #[tokio::main]
 async fn main() {
     let cli = Cli::parse();
 
-    if env::var(RUST_LOG).is_err() {
-        if cli.debug {
-            env::set_var(RUST_LOG, "debug");
-        } else {
-            env::set_var(RUST_LOG, "info");
-        }
-    }
+    env_logger::init();
+    set_log_level(cli.debug);
 
     let device_name: String = cli.device_name.clone();
     let command: String = cli.device_command.clone();
-
-    env_logger::init();
 
     log::debug!("Device: {}", device_name);
     log::debug!("Command: {}", command);
 
     let config: definition::Config = definition::read_config_file(cli.config);
+
+    if cli.suggestion.is_some() {
+        check_completion(&config, cli.suggestion.unwrap());
+    }
+
     let device = definition::get_device(&config, &device_name);
 
     device
@@ -68,10 +52,12 @@ async fn main() {
 }
 
 fn set_log_level(debug: bool) {
-    if debug {
-        env::set_var("RUST_LOG", "debug");
-    } else {
-        env::set_var("RUST_LOG", "info");
+    if env::var(RUST_LOG).is_err() {
+        if debug {
+            env::set_var(RUST_LOG, "debug");
+        } else {
+            env::set_var(RUST_LOG, "info");
+        }
     }
 }
 
@@ -82,10 +68,7 @@ fn check_completion(config: &Config, suggestions: Vec<String>) {
             std::process::exit(1);
         }
         1 => {
-            println!(
-                "{}",
-                get_all_device_commands(&config, suggestions[0].clone())
-            );
+            println!("{}", get_all_device_commands(&config, suggestions[0].clone()));
             std::process::exit(1);
         }
         _ => {
