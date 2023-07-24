@@ -21,3 +21,4 @@ pub struct Cli {
     #[arg(short, long)]
     pub debug: bool,
 }
+

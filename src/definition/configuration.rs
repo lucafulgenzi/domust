@@ -14,8 +14,8 @@ pub enum DeviceType {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Config {
-    pub broadlink: Broadlink,
-    pub switchbot: Switchbot,
+    pub broadlink: Option<Broadlink>,
+    pub switchbot: Option<Switchbot>,
     pub devices: Vec<Device>,
 }
 
@@ -37,6 +37,7 @@ pub struct Switchbot {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Device {
+
     pub name: String,
     pub device_type: DeviceType,
     pub commands: Vec<Command>,
