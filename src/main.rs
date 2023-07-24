@@ -1,5 +1,4 @@
 use std::env;
-use std::path::PathBuf;
 
 use clap::Parser;
 
@@ -83,7 +82,7 @@ fn check_completion(config: &Config, suggestions: Vec<String>) {
         }
         1 => {
             println!(
-                "{:?}",
+                "{}",
                 get_all_device_commands(&config, suggestions[0].clone())
             );
             std::process::exit(1);
