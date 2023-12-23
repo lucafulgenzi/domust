@@ -64,11 +64,11 @@ fn set_log_level(debug: bool) {
 fn check_completion(config: &Config, suggestions: Vec<String>) {
     match suggestions.len() {
         0 => {
-            println!("{}", get_all_devices(&config));
+            println!("{}", get_all_devices(config));
             std::process::exit(1);
         }
         1 => {
-            println!("{}", get_all_device_commands(&config, suggestions[0].clone()));
+            println!("{}", get_all_device_commands(config, suggestions[0].clone()));
             std::process::exit(1);
         }
         _ => {

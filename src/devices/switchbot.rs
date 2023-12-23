@@ -36,7 +36,7 @@ pub async fn exec_switchbot_command(config: &Config, device: &Device, command: S
     log::debug!("String to sign: {}", string_to_sign);
     let bytes_to_sign = string_to_sign.as_bytes();
 
-    let result_bytes = sign_message(bytes_to_sign, &*config.switchbot.clone().unwrap_or_else(|| {
+    let result_bytes = sign_message(bytes_to_sign, config.switchbot.clone().unwrap_or_else(|| {
         log::error!("No switchbot config");
         std::process::exit(1);
     }).secret.as_bytes());
@@ -51,14 +51,14 @@ pub async fn exec_switchbot_command(config: &Config, device: &Device, command: S
     );
     switchbot_headers.insert(
         AUTHORIZATION,
-        HeaderValue::from_str(&*config.switchbot.clone().unwrap_or_else( || {
+        HeaderValue::from_str(&config.switchbot.clone().unwrap_or_else( || {
             log::error!("No switchbot config");
             std::process::exit(1);
         }).token).unwrap(),
     );
-    switchbot_headers.insert("sign", HeaderValue::from_str(&*sign).unwrap());
-    switchbot_headers.insert("t", HeaderValue::from_str(&*t).unwrap());
-    switchbot_headers.insert("nonce", HeaderValue::from_str(&*nonce).unwrap());
+    switchbot_headers.insert("sign", HeaderValue::from_str(&sign).unwrap());
+    switchbot_headers.insert("t", HeaderValue::from_str(&t).unwrap());
+    switchbot_headers.insert("nonce", HeaderValue::from_str(&nonce).unwrap());
 
     let mut base_request_url: String = config.switchbot.clone().unwrap_or_else(|| {
         log::error!("No switchbot config");
@@ -92,7 +92,7 @@ fn check_device_options(device: &Device) {
 }
 
 fn check_existence(value: String, error_message: &str) {
-    if Some(value) == None {
+    if Some(value).is_none() {
         log::error!("{}", error_message);
         std::process::exit(1);
     }

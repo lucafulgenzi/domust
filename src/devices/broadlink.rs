@@ -1,5 +1,4 @@
 use base64::{engine::general_purpose, Engine as _};
-use hex;
 
 use crate::definition::{Broadlink, Command, Config, Device};
 
@@ -40,7 +39,7 @@ fn get_broadlink_request_parameters(config: &Option<Broadlink>, command: Command
     ];
     log::debug!("Request parameters: {:?}", params);
 
-    return params;
+    params
 }
 
 pub async fn exec_broadlink_command(config: &Config, broadlink_device: &Device, command: String) {

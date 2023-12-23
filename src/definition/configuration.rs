@@ -84,7 +84,7 @@ pub fn read_config_file(config_path: Option<PathBuf>) -> Config {
     });
     log::debug!("Config: {:?}", config);
 
-    return config;
+    config
 }
 
 pub fn get_device(config: &Config, device_name: &String) -> Device {
@@ -99,5 +99,5 @@ pub fn get_device(config: &Config, device_name: &String) -> Device {
         });
 
     log::debug!("Device: {:?}", device);
-    return device;
+    device
 }

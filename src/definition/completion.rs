@@ -5,9 +5,9 @@ pub fn get_all_devices(config: &Config) -> String {
 
     for device in &config.devices {
         devices.push_str(&device.name);
-        devices.push_str(" ");
+        devices.push(' ');
     }
-    return devices;
+    devices
 }
 
 pub fn get_all_device_commands(config: &Config, device_name: String) -> String {
@@ -17,9 +17,9 @@ pub fn get_all_device_commands(config: &Config, device_name: String) -> String {
         if device.name == device_name {
             for command in &device.commands {
                 commands.push_str(&command.name);
-                commands.push_str(" ");
+                commands.push(' ');
             }
         }
     }
-    return commands;
+    commands
 }
